@@ -105,17 +105,27 @@ public class DatabaseReceiver {
                             queueNameReceive = "addPersonalDataQueueMessage";
                             sender.sendToRestApi(response, queueNameReceive);
                             break;
-//                        case "submitOtp":
-//                            queueNameReceive = "submitOtpQueueMessage";
-//                            response = authService.submitOtpRegister(json.toJSONString());
-//                            sender.sendToRestApi(response, queueNameReceive);
-//                            // code block
-//                            break;
-//                        case "createPin":
-//                            queueNameReceive = "createPinQueueMessage";
-//                            response = authService.createPin(json.toJSONString());
-//                            sender.sendToRestApi(response, queueNameReceive);
-//                            break;
+                        case "addRelativeData":
+                            response = userService.addRelative(json.toJSONString());
+                            queueNameReceive = "addRelativeDataQueueMessage";
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
+                        case "addWorkData":
+                            response = userService.addWorkData(json.toJSONString());
+                            queueNameReceive = "addWorkDataQueueMessage";
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
+                        case "uploadEKTP":
+                            queueNameReceive = "uploadEKTPQueueMessage";
+                            response = userService.uploadEKTP(json.toJSONString());
+                            sender.sendToRestApi(response, queueNameReceive);
+                            // code block
+                            break;
+                        case "finishRegister":
+                            queueNameReceive = "finishRegisterQueueMessage";
+                            response = userService.finishRegister(json.toJSONString());
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
 //                        case "loginPin":
 //                            queueNameReceive = "loginPinQueueMessage";
 //                            response = authService.loginPin(json.toJSONString());
