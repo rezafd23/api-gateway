@@ -11,6 +11,7 @@ public class DatabaseMain {
             System.out.println(" [*] Waiting for messages..");
             receiver.register();
             receiver.user();
+            receiver.token();
         } catch (Exception e) {
             System.out.println("Error DatabaseMain = " + e);
         }
