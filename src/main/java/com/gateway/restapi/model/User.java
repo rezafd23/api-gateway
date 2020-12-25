@@ -5,6 +5,7 @@ public class User {
 //    personal
     private String no_ktp;
     private String email;
+    private String nama;
     private String education;
     private String marital;
     private String address;
@@ -34,6 +35,14 @@ public class User {
 
 
     public User() {
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public String getMother_name() {

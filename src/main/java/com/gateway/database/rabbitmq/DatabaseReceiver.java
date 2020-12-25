@@ -67,6 +67,16 @@ public class DatabaseReceiver {
                             response = authService.loginPin(json.toJSONString());
                             sender.sendToRestApi(response, queueNameReceive);
                             break;
+                        case "loginPhone":
+                            queueNameReceive = "loginPhoneQueueMessage";
+                            response = authService.loginPhoneNumber(json.toJSONString());
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
+                        case "generateOtp":
+                            queueNameReceive = "generateOtpQueueMessage";
+                            response = authService.generateOtp(json.toJSONString());
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
                         default:
                             // code block
                     }
@@ -128,6 +138,11 @@ public class DatabaseReceiver {
                             response = userService.finishRegister(json.toJSONString());
                             sender.sendToRestApi(response, queueNameReceive);
                             break;
+                        case "getMutasi":
+                            response = userService.getMutasi(json.toJSONString());
+                            queueNameReceive = "getMutasiQueueMessage";
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
 //                        case "loginPin":
 //                            queueNameReceive = "loginPinQueueMessage";
 //                            response = authService.loginPin(json.toJSONString());
@@ -174,14 +189,14 @@ public class DatabaseReceiver {
                             queueNameReceive = "checkUserQueueMessage";
                             sender.sendToRestApi(response, queueNameReceive);
                             break;
-//                        case "addRelativeData":
-//                            response = userService.addRelative(json.toJSONString());
-//                            queueNameReceive = "addRelativeDataQueueMessage";
-//                            sender.sendToRestApi(response, queueNameReceive);
-//                            break;
-//                        case "addWorkData":
-//                            response = userService.addWorkData(json.toJSONString());
-//                            queueNameReceive = "addWorkDataQueueMessage";
+                        case "buyToken":
+                            response = tokenService.buyToken(json.toJSONString());
+                            queueNameReceive = "buyTokenQueueMessage";
+                            sender.sendToRestApi(response, queueNameReceive);
+                            break;
+//                        case "getMutasi":
+//                            response = userService.getMutasi(json.toJSONString());
+//                            queueNameReceive = "getMutasiQueueMessage";
 //                            sender.sendToRestApi(response, queueNameReceive);
 //                            break;
 //                        case "uploadEKTP":

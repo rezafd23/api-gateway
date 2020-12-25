@@ -4,6 +4,7 @@ import com.gateway.restapi.model.Register;
 import com.gateway.restapi.rabbitmq.ApiReceiver;
 import com.gateway.restapi.rabbitmq.ApiSender;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,27 @@ public class AuthController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
 
+    }
+
+    // -------------------Login Phone Number Nasabah-------------------------------------------
+    @RequestMapping(value = "/login/", method = RequestMethod.POST)
+    public ResponseEntity<?> loginPhone(@RequestBody Register register) {
+        String queueNameReceive="loginPhoneQueueMessage";
+        String response="";
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("username", register.getUsername());
+            jsonObject.put("queueName", "loginPhone");
+
+            ApiSender.sendToDb(jsonObject.toJSONString(),"registerQueue");
+            response = receiver.receiveFromDatabase(queueNameReceive);
+
+        }  catch (Exception e) {
+            System.out.println("Error Login Phone Number");
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     // -------------------Submit OTP-------------------------------------------
@@ -113,4 +135,26 @@ public class AuthController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/generateOtp/", method = RequestMethod.POST)
+    public ResponseEntity<?> generateOtp(@RequestParam("phone_number") String phone_number) {
+        String queueNameReceive="generateOtpQueueMessage";
+        String response="";
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("phone_number", phone_number);
+            jsonObject.put("queueName", "generateOtp");
+
+            ApiSender.sendToDb(jsonObject.toJSONString(),"registerQueue");
+            response = receiver.receiveFromDatabase(queueNameReceive);
+            System.out.println("isi Response: "+response);
+
+        }  catch (Exception e) {
+            System.out.println("Error Create PIN");
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
 }

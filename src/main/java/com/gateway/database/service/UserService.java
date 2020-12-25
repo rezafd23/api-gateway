@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +73,6 @@ public class UserService {
     public String addPersonalData(String params) {
         try {
             MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-
 
             JSONParser parser = new JSONParser();
             JSONObject json = (JSONObject) parser.parse(params);
@@ -247,5 +248,86 @@ public class UserService {
             return "0";
         }
 
+    }
+
+//    public String getMutasi(String data){
+//        try {
+//            JSONParser parser = new JSONParser();
+//            JSONObject json = (JSONObject) parser.parse(data);
+//            json.remove("queueName");
+//
+//
+//            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl("http://192.168.18.5:8081/api/transaksi/mutasi/")
+//                    .queryParam("no_rekening", json.get("no_rekening").toString())
+//                    .queryParam("start_date", json.get("start_date").toString())
+//                    .queryParam("end_date", json.get("end_date").toString());
+//
+//            URI uri = UriComponentsBuilder
+//                    .fromUri(new URI("http://192.168.18.5:8081/api/transaksi/mutasi/"))
+//                    .build()
+//                    .encode()
+//                    .toUri();
+//
+////
+////            HttpEntity<?> entity = new HttpEntity<>(headers);
+////
+////            HttpEntity<String> response = restTemplate.exchange(
+////                    builder.toUriString(),
+////                    HttpMethod.GET,
+////                    entity,
+////                    String.class);
+//
+//
+//            HttpHeaders header = new HttpHeaders();
+//            header.set("Content-Type", "application/json");
+//            header.set("apikey", "1001");
+//
+//            HttpEntity<?> entity = new HttpEntity<>(json,header);
+//            restTemplate = new RestTemplate();
+//
+////            HttpEntity entity = new HttpEntity(json,header);
+////            HttpEntity<?> entity = new HttpEntity<Object>(header);
+//            ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+////            ResponseEntity<String> response = restTemplate.exchange(
+////                    "http://192.168.18.5:8081/api/transaksi/mutasi/", HttpMethod.GET, entity, String.class);
+//
+//            System.out.println("isiRESULT: "+response.getBody());
+//
+//            return String.valueOf(response.getBody());
+//
+//        } catch (Exception e){
+//            System.out.println("error Fetch VOucer");
+//            e.printStackTrace();
+//            return "0";
+//        }
+//    }
+
+    public String getMutasi(String data){
+        try {
+            HttpHeaders header = new HttpHeaders();
+            header.set("apikey", "1001");
+//            header.set("Content-Type", "application/json");
+
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(data);
+            json.remove("queueName");
+
+            restTemplate = new RestTemplate();
+
+            HttpEntity entity = new HttpEntity(header);
+            ResponseEntity<String> response = restTemplate.exchange(
+                    "http://192.168.18.5:8081/api/transaksi/mutasi/"+json.get("no_rekening")+"/"+json.get("start_date")
+                    +"/"+json.get("end_date")
+                    , HttpMethod.GET, entity, String.class);
+
+            System.out.println("isiRESULT: "+response.getBody());
+
+            return String.valueOf(response.getBody());
+
+        } catch (Exception e){
+            System.out.println("error Fetch VOucer");
+            e.printStackTrace();
+            return "0";
+        }
     }
 }

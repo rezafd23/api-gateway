@@ -38,15 +38,66 @@ public class AuthService {
 
             HttpEntity<?> request = new HttpEntity<>(json, headers);
 
-//            System.out.println("isi URL: "+url);
             restTemplate = new RestTemplate();
-//            ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
             ResponseEntity<?> response = restTemplate.postForEntity("http://192.168.18.5:3000/app/api/user/register", request, String.class);
             System.out.println("isiRESULT: "+response.getBody());
             return String.valueOf(response.getBody());
 
         } catch (Exception e){
             System.out.println("error Register Phone Number");
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    public String loginPhoneNumber(String params){
+        try {
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            Map map = new HashMap();
+            map.put("Content-Type", "application/json");
+            headers.setAll(map);
+
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(params);
+            json.remove("queueName");
+
+            HttpEntity<?> request = new HttpEntity<>(json, headers);
+
+            restTemplate = new RestTemplate();
+            ResponseEntity<?> response = restTemplate.postForEntity("http://192.168.18.5:3000/app/api/user/loginPhone", request, String.class);
+            System.out.println("isiRESULT: "+response.getBody());
+            return String.valueOf(response.getBody());
+
+        } catch (Exception e){
+            System.out.println("error Register Phone Number");
+            e.printStackTrace();
+            return "0";
+        }
+
+    }
+
+    public String generateOtp(String params){
+        try {
+
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(params);
+            json.remove("queueName");
+
+            MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+            Map map = new HashMap();
+            map.put("Content-Type", "application/json");
+            headers.setAll(map);
+
+            HttpEntity<?> request = new HttpEntity<>(json, headers);
+
+            restTemplate = new RestTemplate();
+            ResponseEntity<?> response = restTemplate.postForEntity("http://192.168.18.5:3000/app/api/otp/generateOtp", request, String.class);
+            System.out.println("isiRESULT: "+response.getBody());
+            return String.valueOf(response.getBody());
+
+        } catch (Exception e){
+            System.out.println("error Generate OTP");
             e.printStackTrace();
             return "0";
         }

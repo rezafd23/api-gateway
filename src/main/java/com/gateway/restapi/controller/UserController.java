@@ -1,5 +1,6 @@
 package com.gateway.restapi.controller;
 
+import com.gateway.restapi.model.MutasiParam;
 import com.gateway.restapi.model.User;
 import com.gateway.restapi.rabbitmq.ApiReceiver;
 import com.gateway.restapi.rabbitmq.ApiSender;
@@ -168,6 +169,41 @@ public class UserController {
             e.printStackTrace();
         }
 
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getMutasi/{no_rekening}/{start_date}/{end_date}", method = RequestMethod.GET)
+    public ResponseEntity<?> getMutasi(@PathVariable("no_rekening") String no_rekening,
+                                       @PathVariable("start_date") String start_date,
+                                       @PathVariable("end_date") String end_date) {
+        String queueNameReceive = "getMutasiQueueMessage";
+        String response = "0";
+        try {
+
+//            String jsonString = new Gson().toJson(mutasiParam);
+//            JSONParser parser = new JSONParser();
+//            JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("no_rekening", no_rekening);
+            jsonObject.put("start_date", start_date);
+            jsonObject.put("end_date", end_date);
+            jsonObject.put("queueName", "getMutasi");
+
+            ApiSender.sendToDb(jsonObject.toJSONString(), "userQueue");
+            response = receiver.receiveFromDatabase(queueNameReceive);
+            System.out.println("isi Response: " + response);
+            if (response.equals("0")) {
+                JSONObject object = new JSONObject();
+                object.put("response", "400");
+                object.put("status", "Error");
+                object.put("payload", "Something Went Wrong with service");
+                response = object.toJSONString();
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error Get Mutasi");
+            e.printStackTrace();
+        }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
